@@ -54,7 +54,7 @@ int main() {
 }
 */
 //练习三
-int main() {
+/*int main() {
 	cv::Mat dispMat = imread("D:\\textphoto\\2.png");
 	cv::Point pt;
 	Point pt1;
@@ -74,5 +74,43 @@ int main() {
 	line(dispMat, pt1, pt2, CV_RGB(255, 0, 0), 2, 8, 0);
 	rectangle(dispMat, rect, CV_RGB(255, 0, 0), 2, 8, 0);
 	imshow("dispMat", dispMat);
+	waitKey(0);
+}*/
+int main() {
+	cv::Mat dispMat = imread("D:\\textphoto\\2.png");
+	Mat background = Mat::zeros(Size(256, 256), CV_8UC3);
+	float m = 0;
+	float range[255] = {0};
+	int height = dispMat.rows;
+	int width = dispMat.cols;
+	int sum = height * width;
+	for (int j = 0; j < height; j++)
+	{
+		for (int i = 0; i < width; i++)
+		{
+			//uchar n = dispMat.ptr<uchar>(j)[i];
+			int n = dispMat.at<Vec3b>(j, i)[0]*0.2989 + dispMat.at<Vec3b>(j, i)[1]*0.587 + dispMat.at<Vec3b>(j, i)[2]*0.114;
+			range[n] = range[n] + 1;
+		}
+	
+	}
+	for (int k = 0;k < 255;k++) {
+		float guiyi = range[k] / sum;
+		cv::Point pt1;
+		cv::Point pt2;
+		pt1.x = k;
+		pt1.y = 256;
+		pt2.x = k;
+		pt2.y = 256-guiyi*10000;
+		
+		line(background, pt1, pt2, CV_RGB(255, 0, 0), 2, 8, 0);
+
+	cout << guiyi << endl;
+	m = m + guiyi;
+	}
+	cout << "概率相加之和："<< endl;
+	cout << m << endl;
+	imshow("dispMat", dispMat);
+	imshow("zhifangtu", background);
 	waitKey(0);
 }
